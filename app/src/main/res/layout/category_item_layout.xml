@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+   <RelativeLayout
+       android:id="@+id/layout"
+       android:layout_width="155sp"
+       android:layout_height="200sp"
+       android:background="@drawable/item_back"
+       android:layout_marginLeft="5sp"
+       android:padding="2sp"
+       android:layout_marginTop="5sp">
+       <ImageView
+           android:id="@+id/iv_category"
+           android:layout_width="140sp"
+           android:layout_height="120sp"
+           android:scaleType="fitXY"
+           android:layout_centerHorizontal="true"
+           android:layout_below="@id/tv_price"
+           android:layout_marginTop="2sp"
+           android:src="@drawable/bag"/>
+
+       <TextView
+           android:id="@+id/category_name"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_below="@id/iv_category"
+           android:layout_marginLeft="10sp"
+           android:textColor="@color/black"
+           android:maxLines="3"
+           android:textStyle="bold"
+           android:text="Category Name"/>
+
+       <TextView
+           android:id="@+id/tv_price"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="price"
+           android:textStyle="bold"
+           android:background="@color/colorPrimary"
+           android:paddingLeft="3sp"
+           android:paddingRight="3sp"
+           android:textColor="@color/white"
+           android:layout_marginLeft="10sp"/>
+
+   </RelativeLayout>
+</RelativeLayout>
