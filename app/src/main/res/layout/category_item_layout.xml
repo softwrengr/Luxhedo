@@ -4,22 +4,30 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="210sp"
+        card_view:cardCornerRadius="10dp"
+        card_view:cardPreventCornerOverlap="true"
+        card_view:cardUseCompatPadding="true">
    <RelativeLayout
        android:id="@+id/layout"
        android:layout_width="155sp"
-       android:layout_height="200sp"
-       android:background="@drawable/item_back"
-       android:layout_marginLeft="5sp"
+       android:layout_height="210sp"
+       android:orientation="vertical"
+       android:background="#fff"
        android:padding="2sp"
        android:layout_marginTop="5sp">
        <ImageView
            android:id="@+id/iv_category"
            android:layout_width="140sp"
            android:layout_height="120sp"
+           android:layout_gravity="center"
            android:scaleType="fitXY"
            android:layout_centerHorizontal="true"
-           android:layout_below="@id/tv_price"
            android:layout_marginTop="2sp"
            android:src="@drawable/bag"/>
 
@@ -30,7 +38,9 @@
            android:layout_below="@id/iv_category"
            android:layout_marginLeft="10sp"
            android:textColor="@color/black"
-           android:maxLines="3"
+           android:layout_marginRight="3sp"
+           android:maxLines="2"
+           android:layout_marginTop="5sp"
            android:textStyle="bold"
            android:text="Category Name"/>
 
@@ -40,11 +50,13 @@
            android:layout_height="wrap_content"
            android:text="price"
            android:textStyle="bold"
-           android:background="@color/colorPrimary"
+           android:layout_alignParentBottom="true"
            android:paddingLeft="3sp"
            android:paddingRight="3sp"
-           android:textColor="@color/white"
+           android:layout_marginBottom="25sp"
+           android:textColor="@color/black"
            android:layout_marginLeft="10sp"/>
 
    </RelativeLayout>
+    </android.support.v7.widget.CardView>
 </RelativeLayout>

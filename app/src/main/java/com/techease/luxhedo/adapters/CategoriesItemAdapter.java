@@ -109,7 +109,7 @@ public class CategoriesItemAdapter extends BaseAdapter {
         viewHolder.layout = convertView.findViewById(R.id.layout);
 
         viewHolder.tvName.setText(model.getName());
-        viewHolder.tvPrice.setText("Price €"+model.getPrice());
+        viewHolder.tvPrice.setText("€"+model.getPrice());
         Glide.with(context).load("http://www.luxhedo.com/pub/media/catalog/product/"+model.getImage1()).into(viewHolder.imageView);
 
         viewHolder.layout.setOnClickListener(new View.OnClickListener() {

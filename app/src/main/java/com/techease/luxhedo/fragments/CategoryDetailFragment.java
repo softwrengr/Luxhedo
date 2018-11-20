@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.techease.luxhedo.R;
+import com.techease.luxhedo.activities.FullscreenActivity;
 import com.techease.luxhedo.adapters.CategoriesAdapter;
 import com.techease.luxhedo.adapters.CategoriesItemAdapter;
 import com.techease.luxhedo.dataModels.categoriesDataModel.CategoryModel;
@@ -60,7 +62,8 @@ import retrofit2.Callback;
 public class CategoryDetailFragment extends Fragment {
     AlertDialog alertDialog;
     View view;
-    int childID, lazyLoading = 50;
+    TextView tvTitle;
+    int childID, lazyLoading = 50,sizeOfArray,totalLoaded;
     HashMap<String, String> hashMap;
     String skuID, strImage1, strImage2, strImage3, strImage4;
     CategoriesItemAdapter categoriesItemAdapter;
@@ -68,6 +71,7 @@ public class CategoryDetailFragment extends Fragment {
     RecyclerView rvCategoriesItems;
     GridView gvCategoriesItems;
     TextView tvLoadMore;
+    ImageView ivBack;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -75,18 +79,63 @@ public class CategoryDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_category_detail, container, false);
-        getActivity().setTitle(GeneralUtils.getCategory(getActivity()));
 
+        tvTitle = view.findViewById(R.id.tvTitle);
+        ivBack = view.findViewById(R.id.ivBack);
+        tvTitle.setText(GeneralUtils.getCategory(getActivity()));
         tvLoadMore = view.findViewById(R.id.tvLoadMore);
+        tvLoadMore.setVisibility(View.GONE);
         gvCategoriesItems = view.findViewById(R.id.gv_categories_items);
         childID = Integer.parseInt(getArguments().getString("id"));
         alertDialog = AlertUtils.createProgressDialog(getActivity());
         alertDialog.show();
-        apiCall(lazyLoading);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, Configuration.BASE + "categories/" + childID + "/products/"
+                , new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                try {
+                    JSONArray jsonArray = new JSONArray(response);
+                    sizeOfArray = jsonArray.length();
+
+                    categoryItemsModelList = new ArrayList<>();
+                    categoriesItemAdapter = new CategoriesItemAdapter(getActivity(), categoryItemsModelList);
+                    gvCategoriesItems.setAdapter(categoriesItemAdapter);
+                    apiCall(lazyLoading);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Authorization", "Bearer " + Configuration.TOKEN);
+                headers.put("Content-Type", "application/json");
+                headers.put("Accept", "application/json");
+                return headers;
+            }
+
+        };
+        RequestQueue mRequestQueue = Volley.newRequestQueue(getActivity());
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(20000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        mRequestQueue.add(stringRequest);
+
 
         tvLoadMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 lazyLoading += 6;
                 tvLoadMore = view.findViewById(R.id.tvLoadMore);
                 gvCategoriesItems = view.findViewById(R.id.gv_categories_items);
@@ -106,15 +155,27 @@ public class CategoryDetailFragment extends Fragment {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
-                Log.d("total", String.valueOf(totalItemCount));
-                Log.d("total", String.valueOf(visibleItemCount));
-                if (visibleItemCount <= totalItemCount) {
-                    lazyLoading += 50;
-                    apiCall(lazyLoading);
+                Log.d("itemTotal", String.valueOf(totalItemCount));
+                Log.d("itemVisible", String.valueOf(visibleItemCount));
+                totalLoaded = totalItemCount;
+                if (totalLoaded < sizeOfArray)
+                {
+                    tvLoadMore.setVisibility(View.VISIBLE);
                 }
+
             }
         });
 
+
+
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startActivity(new Intent(getActivity(), FullscreenActivity.class));
+                getActivity().finish();
+            }
+        });
         return view;
     }
 
@@ -128,6 +189,31 @@ public class CategoryDetailFragment extends Fragment {
 
                 try {
                     JSONArray jsonArray = new JSONArray(response);
+                    if (lazyLoading>50)
+                    {
+                        for (int i = totalLoaded; i < lazyLoading; i++) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            String sku = jsonObject.getString("sku");
+                            skuID = sku;
+                            String categoryID = jsonObject.getString("category_id");
+
+
+                            List<String> name = new ArrayList<String>();
+                            name.add(sku);
+
+                            for (int j = 0; j < name.size(); j++) {
+
+                                apiCallForSingleCategory(name.get(0));
+                                if (alertDialog == null)
+                                    alertDialog = AlertUtils.createProgressDialog(getActivity());
+                                alertDialog.show();
+
+                            }
+                            gvCategoriesItems.deferNotifyDataSetChanged();
+
+                        }
+                    }
+                    else
                     for (int i = 0; i < lazyLoading; i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         String sku = jsonObject.getString("sku");
@@ -139,15 +225,14 @@ public class CategoryDetailFragment extends Fragment {
                         name.add(sku);
 
                         for (int j = 0; j < name.size(); j++) {
-                            categoryItemsModelList = new ArrayList<>();
+
                             apiCallForSingleCategory(name.get(0));
                             if (alertDialog == null)
                                 alertDialog = AlertUtils.createProgressDialog(getActivity());
                             alertDialog.show();
-                            categoriesItemAdapter = new CategoriesItemAdapter(getActivity(), categoryItemsModelList);
-                            gvCategoriesItems.setAdapter(categoriesItemAdapter);
 
                         }
+                        gvCategoriesItems.deferNotifyDataSetChanged();
 
                     }
                 } catch (JSONException e) {

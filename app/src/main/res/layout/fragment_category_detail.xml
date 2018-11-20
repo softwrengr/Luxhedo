@@ -7,6 +7,35 @@
 
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:orientation="horizontal"
+        android:id="@+id/a"
+        android:background="@color/colorPrimaryDark">
+        <ImageView
+            android:id="@+id/ivBack"
+            android:layout_width="50sp"
+            android:layout_height="50sp"
+            android:src="@drawable/left"
+            android:scaleType="center"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10sp"
+            />
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="Categories"
+            android:layout_gravity="center"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:layout_marginLeft="20sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
     <GridView
         android:id="@+id/gv_categories_items"
         android:layout_width="match_parent"
@@ -14,9 +43,10 @@
         android:columnWidth="90dp"
         android:padding="10sp"
         android:horizontalSpacing="15dp"
+        android:layout_below="@+id/a"
         android:numColumns="2"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="25dp"
+        android:verticalSpacing="15dp"
         android:layout_above="@id/tvLoadMore"
         ></GridView>
 
@@ -27,6 +57,7 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="0sp"
+        android:visibility="gone"
         android:padding="10sp"
         android:textSize="18sp"
         android:textColor="@color/black"
