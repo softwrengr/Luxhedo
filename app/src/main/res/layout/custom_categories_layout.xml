@@ -4,14 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
    >
-
-
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
         android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="200sp"
+        android:layout_height="180sp"
         card_view:cardCornerRadius="10dp"
         android:background="@color/black"
         card_view:cardPreventCornerOverlap="true"
@@ -20,7 +18,7 @@
            android:id="@+id/category_layout"
            android:layout_width="match_parent"
            android:layout_height="match_parent"
-           android:background="@drawable/gradient"
+           android:background="@drawable/shoping"
           >
 
            <TextView

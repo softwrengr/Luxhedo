@@ -158,11 +158,14 @@ public class CategoryDetailFragment extends Fragment {
                 Log.d("itemTotal", String.valueOf(totalItemCount));
                 Log.d("itemVisible", String.valueOf(visibleItemCount));
                 totalLoaded = totalItemCount;
-                if (totalLoaded < sizeOfArray)
+                if (totalItemCount != sizeOfArray)
                 {
                     tvLoadMore.setVisibility(View.VISIBLE);
                 }
-
+                else
+                {
+                    tvLoadMore.setVisibility(View.GONE);
+                }
             }
         });
 
