@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +22,7 @@ public class ItemDetailFragment extends Fragment {
     ImageView ivItem,ivNext,ivPrevious;
     TextView tvItemDescp,tvItemPrice,tvItemName;
     int count = 0,count2 = 3;
+    Button btnPurchase;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -28,6 +30,7 @@ public class ItemDetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_item_detail, container, false);
         subItemName = GeneralUtils.getSubCategory(getActivity());
 
+        btnPurchase = view.findViewById(R.id.btnPurchase);
         ivItem = view.findViewById(R.id.item_image);
         tvItemDescp = view.findViewById(R.id.item_descp);
         tvItemPrice = view.findViewById(R.id.item_price);
@@ -44,6 +47,15 @@ public class ItemDetailFragment extends Fragment {
         price = GeneralUtils.getPrice(getActivity());
 
         initUI();
+
+
+        btnPurchase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
 
         return view;
 
